@@ -167,8 +167,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             radius: 24,
             backgroundImage:
                 ep.showImage != null ? NetworkImage(ep.showImage!) : null,
-            onBackgroundImageError:
-                ep.showImage != null ? (_, __) {} : null,
             child: ep.showImage == null
                 ? Icon(Icons.tv, color: cs.onSurfaceVariant)
                 : null,

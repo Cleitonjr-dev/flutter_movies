@@ -75,11 +75,16 @@ class _MoviesScreenState extends State<MoviesScreen> {
           controller: _searchController,
           focusNode: _searchFocusNode,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
-            prefixIcon: Icon(Icons.search, color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.search,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             hintText: 'Search...',
-            hintStyle: TextStyle(color: Colors.white70),
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           onSubmitted: (value) {
             if (value.trim().isNotEmpty) {

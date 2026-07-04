@@ -29,10 +29,17 @@ class _CastTabState extends State<CastTab> {
   Future<void> _loadCast() async {
     try {
       final cast = await _repository.fetchCast(widget.showId);
-      if (mounted) setState(() { _cast = cast; _isLoading = false; });
+      if (mounted)
+        setState(() {
+          _cast = cast;
+          _isLoading = false;
+        });
     } catch (e) {
       if (mounted) {
-        setState(() { _error = 'Erro ao carregar elenco'; _isLoading = false; });
+        setState(() {
+          _error = 'Erro ao carregar elenco';
+          _isLoading = false;
+        });
       }
     }
   }
@@ -70,7 +77,6 @@ class _CastTabState extends State<CastTab> {
             child: member.personImage == null
                 ? Icon(Icons.person, color: cs.onSurfaceVariant)
                 : null,
-            onBackgroundImageError: (_, __) {},
           ),
           title: Text(
             member.personName,
