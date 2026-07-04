@@ -1,4 +1,4 @@
-name: flutter_movies
+name: movier_app
 description: Projeto para listagem de filmes e consumo da API TVMaze.
 publish_to: 'none'
 version: 1.0.0+1

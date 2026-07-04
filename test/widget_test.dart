@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_movies/app.dart';
+import 'package:movier_app/app.dart';
 
 void main() {
   testWidgets('App renders with AppBar title and search icon',

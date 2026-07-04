@@ -13,7 +13,7 @@ class App extends StatelessWidget {
       builder: (context, themeMode, _) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Filmes',
+          title: 'MovierApp',
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: themeMode,

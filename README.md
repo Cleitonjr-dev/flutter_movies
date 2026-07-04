@@ -1,27 +1,60 @@
-# Flutter Movies
+# MovierApp
 
-Aplicativo Flutter para busca e listagem de filmes e séries consumindo a [API TVMaze](https://www.tvmaze.com/api).
+Aplicativo Flutter para descoberta de filmes e series — busca, detalhes com elenco e episodios, e programacao diaria da TV por pais. Consome a [API TVMaze](https://www.tvmaze.com/api).
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.44.4-02569B?logo=flutter" alt="Flutter">
-  <img src="https://img.shields.io/badge/Dart-3.12.2-0175C2?logo=dart" alt="Dart">
-  <img src="https://img.shields.io/badge/Material_Design-3-795548?logo=material-design" alt="Material 3">
+  <img src="https://img.shields.io/badge/Flutter-3.44.4-7C3AED?logo=flutter" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-3.12.2-8B5CF6?logo=dart" alt="Dart">
+  <img src="https://img.shields.io/badge/Material_Design_3-purple?logo=material-design" alt="Material 3">
   <img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build">
-  <img src="https://img.shields.io/badge/tests-2%2F2%20passed-brightgreen" alt="Tests">
-  <img src="https://img.shields.io/badge/analysis-0%20issues-brightgreen" alt="Analysis">
+  <img src="https://img.shields.io/badge/tests-2%2F2_passed-brightgreen" alt="Tests">
+  <img src="https://img.shields.io/badge/analysis-0_errors-brightgreen" alt="Analysis">
+</p>
+
+<p align="center">
+  <sub>Light</sub>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  Roxo <code>#7C3AED</code>
+  &nbsp;|&nbsp;
+  Magenta <code>#D946EF</code>
+  &nbsp;|&nbsp;
+  Coral <code>#FF6B5F</code>
+  <br>
+  <sub>Dark</sub>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  Lilas <code>#8B5CF6</code>
+  &nbsp;|&nbsp;
+  Rosa <code>#E056FD</code>
+  &nbsp;|&nbsp;
+  Laranja <code>#FF7A59</code>
 </p>
 
 ---
 
 ## Funcionalidades
 
-- Listagem de filmes e séries da API TVMaze
-- Busca por nome
-- Tela de detalhes com imagem e link clicavel para pagina oficial
-- Suporte a **Light Mode** e **Dark Mode** (Material Design 3)
-- Tratamento de estados: **loading**, **erro** (com botao tentar novamente) e **lista vazia**
-- Imagens com fallback para erros de carregamento
-- Responsivo (SingleChildScrollView em telas menores)
+### Listagem
+- Busca por nome com `TextField` na AppBar
+- Cards com poster, nome e generos (ate 3)
+- Tratamento de estados: **loading**, **erro** (com tentar novamente) e **vazio**
+
+### Detalhes (3 abas)
+| Aba | Conteudo |
+|-----|----------|
+| **Info** | Poster, nota (estrela), status (Finalizada/Em exibicao), chips de generos, sinopse, estreia, emissora, idioma, duracao e site oficial clicavel |
+| **Elenco** | Lista com foto do ator e nome do personagem |
+| **Episodios** | Agrupados por temporada em `ExpansionTile`, com numero e data de exibicao |
+
+### Programacao de Hoje
+- Grade do que esta passando na TV hoje
+- Seletor de pais com 12 opcoes (US, GB, BR, CA, AU, JP, DE, FR, IT, ES, PT, MX)
+- Nome da serie, episodio, temporada, horario
+
+### Tema
+- Modo **claro** e **escuro** com toggle de um toque
+- Gradiente no AppBar (roxo → lilas → magenta → coral)
+- Paleta premium estilo IMDb / Letterboxd
+- Material Design 3 completo
 
 ---
 
@@ -42,26 +75,34 @@ Aplicativo Flutter para busca e listagem de filmes e séries consumindo a [API T
 
 ## Arquitetura
 
-O projeto segue uma **Clean Architecture simplificada** com Repository Pattern:
+**Clean Architecture simplificada** com Repository Pattern:
 
 ```
 lib/
-├── main.dart                          # Entry point
-├── app.dart                           # MaterialApp + tema
+├── main.dart                               # Entry point
+├── app.dart                                # MaterialApp + tema
 ├── core/
 │   ├── constants/
-│   │   └── api_constants.dart         # URL base da API
+│   │   └── api_constants.dart              # URLs da API
 │   └── theme/
-│       └── app_theme.dart             # ThemeData light/dark (Material 3)
+│       └── app_theme.dart                  # AppColors + ThemeData (light/dark)
 ├── models/
-│   └── movie.dart                     # Modelo imutavel com fromJson seguro
+│   ├── movie.dart                          # Movie (imutavel, fromJson null-safe)
+│   ├── cast_member.dart                    # CastMember (ator + personagem)
+│   └── episode.dart                        # Episode (temporada, data, resumo)
 ├── repositories/
-│   └── movie_repository.dart          # Repository injetavel com http.Client
+│   └── movie_repository.dart              # Repository injetavel + ScheduleEpisode
 └── screens/
     ├── movies/
-    │   └── movies_screen.dart         # Listagem + busca funcional
-    └── detail/
-        └── detail_screen.dart         # Detalhes + Linkify corrigido
+    │   └── movies_screen.dart              # Listagem + busca funcional
+    ├── detail/
+    │   ├── detail_screen.dart              # Tela de detalhes com TabBar
+    │   └── widgets/
+    │       ├── info_tab.dart              # Aba de informacoes
+    │       ├── cast_tab.dart              # Aba de elenco
+    │       └── episodes_tab.dart          # Aba de episodios
+    └── schedule/
+        └── schedule_screen.dart           # Programacao de hoje
 ```
 
 ### Camadas
@@ -69,42 +110,52 @@ lib/
 | Camada | Responsabilidade |
 |--------|-----------------|
 | **Screens** | UI — renderizacao e interacao com usuario |
-| **Repositories** | Dados — comunicacao com API, injetavel e testavel |
+| **Repositories** | Dados — comunicacao com API, injetavel via `http.Client` |
 | **Models** | Dominio — entidades imutaveis com serializacao null-safe |
-| **Core** | Infra — constantes, temas e configuracao compartilhada |
+| **Core** | Infra — constantes, cores e tema compartilhado |
 
 ---
 
 ## Como funciona
 
-### Fluxo principal
-
-1. Ao abrir o app, `MoviesScreen.initState()` dispara uma busca padrao por "star trek"
-2. A requisicao e feita pelo `MovieRepository` usando o pacote `http`
-3. A resposta JSON e decodificada e mapeada para `List<Movie>`
-4. Enquanto carrega, um `CircularProgressIndicator` e exibido
-5. Se houver erro, aparece a mensagem com botao "Tentar novamente"
-6. Se a lista vier vazia, aparece "Nenhum filme encontrado"
-
-### Busca
-
-- O icone de lupa na AppBar alterna para um `TextField`
-- Ao submeter (Enter), a busca e realizada na API
-- O icone X fecha o campo e restaura o titulo
+### Busca e Listagem
+1. Ao abrir, busca padrao por "star trek" via `MovieRepository.fetchMovies()`
+2. JSON decodificado e mapeado para `List<Movie>` com null-safety e fallback para imagem
+3. Loading → `CircularProgressIndicator` / Erro → mensagem + botao / Vazio → texto
 
 ### Detalhes
+1. Toque no card → `DetailScreen` com `DefaultTabController` de 3 abas
+2. **Info**: dados direto do modelo `Movie` (ja vindos da busca)
+3. **Elenco**: `GET /shows/:id/cast` → `CastTab`
+4. **Episodios**: `GET /shows/:id/episodes` → `EpisodesTab` agrupado por temporada
 
-- Ao tocar em um filme, navega para `DetailScreen`
-- Exibe a imagem do poster (com fallback se falhar)
-- Exibe o link oficial como texto clicavel via `Linkify`
-- Ao tocar no link, abre no navegador externo (`url_launcher`)
-- Se nao for possivel abrir, exibe um `SnackBar`
+### Programacao
+1. Icone de relogio na AppBar → `ScheduleScreen`
+2. `GET /schedule?country=:code` → lista de `ScheduleEpisode`
+3. Dropdown troca de pais → nova requisicao
+
+### Tema
+- `ValueNotifier<ThemeMode>` reativo com `ValueListenableBuilder` no `MaterialApp`
+- Toggle via extensao `themeNotifier.toggle()` em todas as AppBars
+
+---
+
+## API TVMaze
+
+Endpoints consumidos:
+
+| Endpoint | Uso |
+|----------|-----|
+| `GET /search/shows?q={query}` | Busca de series |
+| `GET /shows/:id/cast` | Elenco |
+| `GET /shows/:id/episodes` | Episodios |
+| `GET /schedule?country={code}` | Programacao diaria |
 
 ---
 
 ## Pre-requisitos
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.44.4 ou superior
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.44.4+
 - Android Studio / Xcode (para builds mobile)
 - Dispositivo ou emulador Android/iOS
 
@@ -113,60 +164,19 @@ lib/
 ## Instalacao e execucao
 
 ```bash
-# Clone o repositorio
 git clone <url-do-repositorio>
-cd flutter_movies
+cd movier_app
 
-# Instale as dependencias
 flutter pub get
-
-# Execute o app
 flutter run
 ```
 
-### Executar testes
+### Comandos uteis
 
 ```bash
-flutter test
-```
-
-### Verificar qualidade do codigo
-
-```bash
-flutter analyze
-```
-
-### Build Android (APK)
-
-```bash
-flutter build apk --debug
-```
-
----
-
-## API
-
-O app consome a API publica do [TVMaze](https://www.tvmaze.com/api):
-
-| Endpoint | Descricao |
-|----------|-----------|
-| `GET /search/shows?q={query}` | Busca series por nome |
-
-Exemplo de resposta:
-
-```json
-[
-  {
-    "show": {
-      "id": 123,
-      "name": "Star Trek",
-      "url": "https://www.tvmaze.com/shows/123/star-trek",
-      "image": {
-        "medium": "https://static.tvmaze.com/uploads/images/medium_portrait/81/202627.jpg"
-      }
-    }
-  }
-]
+flutter test          # Testes de widget
+flutter analyze       # Qualidade do codigo
+flutter build apk --debug   # APK Android
 ```
 
 ---
@@ -185,4 +195,4 @@ Exemplo de resposta:
 
 ## Licenca
 
-Este projeto e um aplicativo de estudo. Sinta-se livre para usar como referencia.
+Projeto de estudo. Livre para uso como referencia.

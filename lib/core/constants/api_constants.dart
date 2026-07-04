@@ -1,1 +1,3 @@
-const baseUrl = 'https://api.tvmaze.com/search/shows?q=';
+const apiBase = 'https://api.tvmaze.com';
+const searchShowsUrl = '$apiBase/search/shows?q=';
+const scheduleUrl = '$apiBase/schedule?country=';

@@ -5,6 +5,7 @@ import '../../core/theme/app_theme.dart';
 import '../../models/movie.dart';
 import '../../repositories/movie_repository.dart';
 import '../detail/detail_screen.dart';
+import '../schedule/schedule_screen.dart';
 
 class MoviesScreen extends StatefulWidget {
   const MoviesScreen({super.key});
@@ -98,7 +99,29 @@ class _MoviesScreenState extends State<MoviesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: _appBarTitle,
+        foregroundColor: _isSearching ? null : Colors.white,
+        flexibleSpace: _isSearching
+            ? null
+            : Container(
+                decoration: BoxDecoration(
+                  gradient: brightness == Brightness.dark
+                      ? AppColors.darkGradient
+                      : AppColors.primaryGradient,
+                ),
+              ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.schedule),
+            tooltip: 'Programacao de hoje',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ScheduleScreen(),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: Icon(
               brightness == Brightness.dark
@@ -172,8 +195,10 @@ class _MoviesScreenState extends State<MoviesScreen> {
               ),
             ),
             subtitle: Text(
-              movie.link,
-              style: TextStyle(color: colorScheme.onSurfaceVariant),
+              movie.genres.isNotEmpty
+                  ? movie.genres.take(3).join('  ·  ')
+                  : movie.link,
+              style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13),
             ),
             trailing: Icon(
               Icons.chevron_right,
