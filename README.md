@@ -67,7 +67,7 @@ Aplicativo Flutter para descoberta de filmes e series — busca, detalhes com el
 | UI | Material Design 3 |
 | HTTP | `http` ^1.2.0 |
 | Links | `url_launcher` ^6.3.0 / `flutter_linkify` ^6.0.0 |
-| Lint | `flutter_lints` ^5.0.0 |
+| Lint | `flutter_lints` ^6.0.0 |
 | Build Android | AGP 9.0.1 / Gradle 9.1 / Kotlin 2.3.20 / Java 17 |
 | Build iOS | Minimum deployment target 12.0 |
 
@@ -188,7 +188,7 @@ flutter build apk --debug   # APK Android
 | `http` | ^1.2.0 | Requisicoes HTTP |
 | `url_launcher` | ^6.3.0 | Abertura de URLs externas |
 | `flutter_linkify` | ^6.0.0 | Transforma texto em links clicaveis |
-| `flutter_lints` | ^5.0.0 | Regras de lint (dev) |
+| `flutter_lints` | ^6.0.0 | Regras de lint (dev) |
 | `flutter_test` | SDK | Testes de widget (dev) |
 
 ---
